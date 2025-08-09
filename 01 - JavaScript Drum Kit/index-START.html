@@ -9,8 +9,6 @@
 </head>
 
 <body>
-
-
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -61,33 +59,23 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
   <script>
-    // add function to all buttons
-    document.addEventListener("DOMContentLoaded", () => {
-      const keys = document.querySelectorAll('.key');
-      keys.forEach(key => {
-        key.addEventListener("click", playsound);
-      })
-    })
-    // change the style of the button user pressed 
-    function animateKey(keyElement) {
-      keyElement.classList.add('playing');
-      setTimeout(() => {
-        keyElement.classList.remove('playing');
-      }, 100);
-    }
-    // play the audio
-    function payAudio(audio) {
-      audio.currentTime = 0;
-      audio.play();
+    // remove the playing class
+    function removeTransition(e) {
+      if (e.propertyName = 'transform') return;
+      this.classList.remove('playing');
     }
     // play the audio when the button is clicked
     function playsound(e) {
-      const key = e.currentTarget.dataset.key;
-      animateKey(e.currentTarget);
-      const audio = document.querySelector(`audio[data-key='${key}']`);
+      const key = document.querySelector(`.key[data-key='${e.keyCode}']`);
+      const audio = document.querySelector(`audio[data-key='${e.keyCode}']`);
+      key.classList.add('playing');
       if (audio == null) return;
-      payAudio(audio);
+      audio.currentTime = 0;
+      audio.play();
     };
+    const keys = Array.from(document.querySelectorAll('.key'));
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+    window.addEventListener('keydown', playsound);
   </script>
 
 
